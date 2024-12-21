@@ -36,47 +36,51 @@
     <p id="walletBalance"></p>
 
     <script>
-        // Connect Wallet
-        document.getElementById('connectWallet').addEventListener('click', async () => {
+        // Function to connect MetaMask wallet
+        async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const account = accounts[0];
-                    // Show connected wallet address
                     document.getElementById('walletAddress').innerText = `Connected: ${account}`;
-                    // Show balance button
-                    document.getElementById('checkBalance').style.display = 'inline-block';
+                    document.getElementById('checkBalance').style.display = 'inline-block'; // Show the "Check Balance" button
                 } catch (error) {
                     console.error("Error connecting wallet:", error);
+                    alert("Failed to connect wallet. Please try again.");
                 }
             } else {
                 alert("MetaMask is not installed. Please install MetaMask to use this feature.");
             }
-        });
+        }
 
-        // Fetch Wallet Balance
-        document.getElementById('checkBalance').addEventListener('click', async () => {
+        // Function to check wallet balance
+        async function checkBalance() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const account = accounts[0];
-                    const balance = await ethereum.request({
+                    const balance = await window.ethereum.request({
                         method: 'eth_getBalance',
                         params: [account, 'latest'],
                     });
-                    // Convert balance from Wei to ETH/MATIC
-                    const formattedBalance = parseInt(balance, 16) / 1e18;
-                    document.getElementById('walletBalance').innerText = `Your balance: ${formattedBalance} ETH`;
+                    const formattedBalance = parseInt(balance, 16) / 1e18; // Convert from Wei to ETH/MATIC
+                    document.getElementById('walletBalance').innerText = `Your balance: ${formattedBalance.toFixed(4)} ETH`;
                 } catch (error) {
                     console.error("Error fetching balance:", error);
+                    alert("Failed to fetch balance. Please try again.");
                 }
             } else {
                 alert("MetaMask is not installed.");
             }
-        });
+        }
+
+        // Add event listeners
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
+        document.getElementById('checkBalance').addEventListener('click', checkBalance);
     </script>
 </body>
 </html>
+
 
 
 
